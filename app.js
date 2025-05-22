@@ -1,5 +1,3 @@
-// app.js – RV-C mobile UI (device type from DM_RV + all existing polish)
-// ---------------------------------------------------------------------
 
 // ===== UI handles ====================================================
 const connectBtn  = document.getElementById('connectBtn');
@@ -117,6 +115,16 @@ function sortDevices() {
     if (aP !== bP) return aP ? -1 : 1;
     return parseInt(a.dataset.src, 16) - parseInt(b.dataset.src, 16);
   }).forEach(n => deviceList.appendChild(n));
+
+  // Always update pin icon state for all device pin buttons
+  [...deviceList.children].forEach(details => {
+    const pinBtn = details.querySelector('.pin-device');
+    if (pinBtn) {
+      const isPinned = pinnedDevices.has(details.dataset.src);
+      pinBtn.classList.toggle('opacity-30', !isPinned);
+      pinBtn.setAttribute('aria-pressed', isPinned);
+    }
+  });
 }
 
 // ===== ensure DGN row ===============================================
@@ -131,18 +139,15 @@ function ensureDgnRow(wrap, dgn) {
 
   const pin = document.createElement('button');
   pin.className =
-    'pin-dgn text-xl mr-2 focus:outline-none select-none opacity-30';
+    'pin-dgn text-xl mr-2 focus:outline-none select-none';
   pin.textContent = '📌';
   pin.title       = 'Pin DGN';
-  pin.classList.toggle('opacity-30', !pinnedDGNs.has(dgn));
 
   pin.addEventListener('click', e => {
     e.stopPropagation();
-    const pinned = pinnedDGNs.has(dgn);
-    if (pinned) pinnedDGNs.delete(dgn);
-    else        pinnedDGNs.add(dgn);
-    pin.classList.toggle('opacity-30', !pinned);
-    sortRows(wrap);
+    if (pinnedDGNs.has(dgn)) pinnedDGNs.delete(dgn);
+    else                     pinnedDGNs.add(dgn);
+    sortRows(wrap); // This will update all pin icons
   });
 
   const name = document.createElement('span');
@@ -167,14 +172,26 @@ function ensureDgnRow(wrap, dgn) {
 
 // sort rows: pinned first, then by descending count
 function sortRows(wrap) {
-  [...wrap.children].sort((a, b) => {
+  const rows = [...wrap.children];
+  rows.sort((a, b) => {
     const aP = pinnedDGNs.has(a.dataset.dgn);
     const bP = pinnedDGNs.has(b.dataset.dgn);
     if (aP !== bP) return aP ? -1 : 1;
     const cA = +a.querySelector('.dgn-count').textContent;
     const cB = +b.querySelector('.dgn-count').textContent;
     return cB - cA;
-  }).forEach(r => wrap.appendChild(r));
+  });
+  rows.forEach(r => wrap.appendChild(r));
+
+  // Always update pin icon state for all rows
+  rows.forEach(r => {
+    const pinBtn = r.querySelector('.pin-dgn');
+    if (pinBtn) {
+      const isPinned = pinnedDGNs.has(r.dataset.dgn);
+      pinBtn.classList.toggle('opacity-30', !isPinned);
+      pinBtn.setAttribute('aria-pressed', isPinned);
+    }
+  });
 }
 
 // ===== visual helpers ===============================================
