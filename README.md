@@ -11,7 +11,8 @@ The RV-C Tool is a web-based application designed to interact with RV-C (Recreat
 ## Browser Setup
 
 Only supported in Chrome. You will need to enable Web Serial with the following flag:
-[chrome://flags/#enable-experimental-web-platform-features](chrome://flags/#enable-experimental-web-platform-features)
+
+chrome://flags/#enable-experimental-web-platform-features
 
 ### Managing Logs
 
