@@ -1,4 +1,4 @@
-[https://modulus-controls.github.io/rvctool/](Click Here To Open RV-C Tool)
+https://modulus-controls.github.io/rvctool/
 
 # Web RV-C Tool
 
