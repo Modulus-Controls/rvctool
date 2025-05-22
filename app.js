@@ -1,4 +1,3 @@
-
 // ===== UI handles ====================================================
 const connectBtn  = document.getElementById('connectBtn');
 const saveLogBtn  = document.getElementById('saveLogBtn');
@@ -196,8 +195,10 @@ function sortRows(wrap) {
 
 // ===== visual helpers ===============================================
 function flash(row) {
-  row.style.backgroundColor = '#059669';
-  setTimeout(() => (row.style.backgroundColor = ''), 300);
+  row.classList.add('flash-highlight');
+  setTimeout(() => {
+    row.classList.remove('flash-highlight');
+  }, 500); // The highlight stays for 500ms, then fades out
 }
 function pulse(badge, val) {
   if (+badge.textContent === val) return;
